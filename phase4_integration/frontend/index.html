@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Millets Price & Demand Predictor</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<h1>🌾 Millets Price & Demand Predictor</h1>
+<p class="subtitle">XGBoost-powered estimates of millet price and market demand</p>
+
+<div class="container">
+
+  <div class="tabs">
+    <div class="tab-btn active" onclick="switchTab('predict', this)">Predict</div>
+    <div class="tab-btn" onclick="switchTab('history', this)">History</div>
+    <div class="tab-btn" onclick="switchTab('about', this)">About</div>
+  </div>
+
+  <!-- PREDICT TAB -->
+  <div id="predict" class="tab-content active">
+
+    <div class="note">
+      Predictions come from XGBoost models trained on historical millet price and demand data,
+      served through a Flask API. Start the backend before using this page.
+    </div>
+
+    <div class="two-col">
+
+      <!-- PRICE FORM -->
+      <div class="form-box">
+        <h3>Predict Price</h3>
+        <label>Region</label>
+        <select id="p-region">
+          <option value="0">Mandi A</option>
+          <option value="1">Mandi B</option>
+        </select>
+
+        <label>Month</label>
+        <select id="p-month">
+          <option value="1">January</option><option value="2">February</option>
+          <option value="3">March</option><option value="4">April</option>
+          <option value="5">May</option><option value="6">June</option>
+          <option value="7">July</option><option value="8">August</option>
+          <option value="9">September</option><option value="10">October</option>
+          <option value="11">November</option><option value="12" selected>December</option>
+        </select>
+
+        <label>Wheat Price (₹/Quintal)</label>
+        <input type="number" id="p-wheat" value="2400" min="2000" max="3000">
+
+        <label>Rainfall (mm)</label>
+        <input type="number" id="p-rain" value="10" min="0" max="80">
+
+        <label>Previous 7-Day Avg Price (₹)</label>
+        <input type="number" id="p-price7" value="2720">
+
+        <button onclick="predictPrice()">Predict Price</button>
+      </div>
+
+      <!-- PRICE RESULT -->
+      <div class="result-box">
+        <div class="result-number" id="price-out">₹ —</div>
+        <div class="result-label">Estimated Price per Quintal</div>
+        <div id="price-tips"></div>
+      </div>
+
+    </div>
+
+    <div class="two-col">
+
+      <!-- DEMAND FORM -->
+      <div class="form-box">
+        <h3>Predict Demand</h3>
+        <label>Region</label>
+        <select id="d-region">
+          <option value="0">Mandi A</option>
+          <option value="1">Mandi B</option>
+        </select>
+
+        <label>Month</label>
+        <select id="d-month">
+          <option value="1">January</option><option value="2">February</option>
+          <option value="3">March</option><option value="4">April</option>
+          <option value="5">May</option><option value="6">June</option>
+          <option value="7">July</option><option value="8">August</option>
+          <option value="9">September</option><option value="10">October</option>
+          <option value="11">November</option><option value="12" selected>December</option>
+        </select>
+
+        <label>Current Price (₹/Quintal)</label>
+        <input type="number" id="d-price" value="2750">
+
+        <label>Previous 7-Day Avg Demand (Tonnes)</label>
+        <input type="number" id="d-dem7" value="150">
+
+        <button class="demand-btn" onclick="predictDemand()">Predict Demand</button>
+      </div>
+
+      <!-- DEMAND RESULT -->
+      <div class="result-box">
+        <div class="result-number" id="demand-out" style="color:#1a5a8a">— T</div>
+        <div class="result-label">Estimated Demand (Tonnes/day)</div>
+        <div id="demand-tips"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- HISTORY TAB -->
+  <div id="history" class="tab-content">
+    <div class="form-box">
+      <h3>Prediction History</h3>
+      <table>
+        <tr><th>#</th><th>Type</th><th>Region</th><th>Month</th><th>Result</th></tr>
+        <tbody id="history-body">
+          <tr><td colspan="5" style="text-align:center;color:#888">No predictions yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ABOUT TAB -->
+  <div id="about" class="tab-content">
+    <div class="info-box">
+      <h3>How This Works</h3>
+      <p style="font-size:13px;color:#444;line-height:1.6">
+        This project estimates millet price and demand using a simple formula
+        based on factors that commonly affect agricultural markets, such as:
+      </p>
+      <ul>
+        <li>Season / month of the year</li>
+        <li>Rainfall</li>
+        <li>Price of a substitute crop (wheat)</li>
+        <li>Recent price and demand trend</li>
+      </ul>
+      <p style="font-size:13px;color:#444;line-height:1.6">
+        It is meant as a simple, explainable demo of the idea behind price/demand
+        prediction for a millet value-chain project — it is not connected to a
+        real dataset or a trained ML model.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/history.js"></script>
+<script src="js/api.js"></script>
+<script src="js/tabs.js"></script>
+<script src="js/price.js"></script>
+<script src="js/demand.js"></script>
+</body>
+</html>
